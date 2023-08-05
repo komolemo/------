@@ -1,0 +1,132 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 95%;
+            height: 1000px;
+            background-color: #FFFFFF;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"font": {"color": "black"}, "id": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "label": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "shape": "dot", "title": "\u5916\u56fd\u4eba\u304a\u65ad\u308a Neighbors:\u003cbr\u003e\u5c11\u5b50\u003cbr\u003e\u6700\u60aa\u003cbr\u003e\u7406\u5ff5\u003cbr\u003e\u60e8\u72b6\u003cbr\u003e\u653e\u7f6e", "value": 5}, {"font": {"color": "black"}, "id": "\u5c11\u5b50", "label": "\u5c11\u5b50", "shape": "dot", "title": "\u5c11\u5b50 Neighbors:\u003cbr\u003e\u5916\u56fd\u4eba\u304a\u65ad\u308a", "value": 1}, {"font": {"color": "black"}, "id": "\u60e8\u72b6", "label": "\u60e8\u72b6", "shape": "dot", "title": "\u60e8\u72b6 Neighbors:\u003cbr\u003e\u5916\u56fd\u4eba\u304a\u65ad\u308a", "value": 1}, {"font": {"color": "black"}, "id": "\u653e\u7f6e", "label": "\u653e\u7f6e", "shape": "dot", "title": "\u653e\u7f6e Neighbors:\u003cbr\u003e\u5916\u56fd\u4eba\u304a\u65ad\u308a", "value": 1}, {"font": {"color": "black"}, "id": "\u6700\u60aa", "label": "\u6700\u60aa", "shape": "dot", "title": "\u6700\u60aa Neighbors:\u003cbr\u003e\u5916\u56fd\u4eba\u304a\u65ad\u308a", "value": 1}, {"font": {"color": "black"}, "id": "\u7406\u5ff5", "label": "\u7406\u5ff5", "shape": "dot", "title": "\u7406\u5ff5 Neighbors:\u003cbr\u003e\u5916\u56fd\u4eba\u304a\u65ad\u308a", "value": 1}, {"font": {"color": "black"}, "id": "1986\u5e74", "label": "1986\u5e74", "shape": "dot", "title": "1986\u5e74 Neighbors:\u003cbr\u003e\u6cd5\u5f8b", "value": 1}, {"font": {"color": "black"}, "id": "\u6cd5\u5f8b", "label": "\u6cd5\u5f8b", "shape": "dot", "title": "\u6cd5\u5f8b Neighbors:\u003cbr\u003e\u4e8c\u306e\u821e\u003cbr\u003e1986\u5e74\u003cbr\u003e\u52b4\u50cd\u003cbr\u003e\u5e02\u6c11\u003cbr\u003e\u4e0a\u7d1a", "value": 5}, {"font": {"color": "black"}, "id": "\u4e0a\u7d1a", "label": "\u4e0a\u7d1a", "shape": "dot", "title": "\u4e0a\u7d1a Neighbors:\u003cbr\u003e\u6cd5\u5f8b", "value": 1}, {"font": {"color": "black"}, "id": "\u4e8c\u306e\u821e", "label": "\u4e8c\u306e\u821e", "shape": "dot", "title": "\u4e8c\u306e\u821e Neighbors:\u003cbr\u003e\u6cd5\u5f8b", "value": 1}, {"font": {"color": "black"}, "id": "\u52b4\u50cd", "label": "\u52b4\u50cd", "shape": "dot", "title": "\u52b4\u50cd Neighbors:\u003cbr\u003e\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9\u003cbr\u003e\u6cd5\u5f8b\u003cbr\u003e\u66f4\u65b0\u003cbr\u003e\u5fc5\u9808", "value": 4}, {"font": {"color": "black"}, "id": "\u5e02\u6c11", "label": "\u5e02\u6c11", "shape": "dot", "title": "\u5e02\u6c11 Neighbors:\u003cbr\u003e\u6cd5\u5f8b", "value": 1}, {"font": {"color": "black"}, "id": "\u30ad\u30c4", "label": "\u30ad\u30c4", "shape": "dot", "title": "\u30ad\u30c4 Neighbors:\u003cbr\u003e\u65e5\u672c\u4eba\u003cbr\u003e\u4eba\u6a29\u554f\u984c\u003cbr\u003e\u5916\u56fd\u4eba\u003cbr\u003e\u5319", "value": 4}, {"font": {"color": "black"}, "id": "\u4eba\u6a29\u554f\u984c", "label": "\u4eba\u6a29\u554f\u984c", "shape": "dot", "title": "\u4eba\u6a29\u554f\u984c Neighbors:\u003cbr\u003e\u30ad\u30c4\u003cbr\u003e\u5319", "value": 2}, {"font": {"color": "black"}, "id": "\u5319", "label": "\u5319", "shape": "dot", "title": "\u5319 Neighbors:\u003cbr\u003e\u4eba\u6a29\u554f\u984c\u003cbr\u003e\u30ad\u30c4", "value": 2}, {"font": {"color": "black"}, "id": "\u5916\u56fd\u4eba", "label": "\u5916\u56fd\u4eba", "shape": "dot", "title": "\u5916\u56fd\u4eba Neighbors:\u003cbr\u003e\u30ad\u30c4", "value": 1}, {"font": {"color": "black"}, "id": "\u65e5\u672c\u4eba", "label": "\u65e5\u672c\u4eba", "shape": "dot", "title": "\u65e5\u672c\u4eba Neighbors:\u003cbr\u003e\u30ad\u30c4", "value": 1}, {"font": {"color": "black"}, "id": "\u6c38\u4f4f\u8cc7\u683c", "label": "\u6c38\u4f4f\u8cc7\u683c", "shape": "dot", "title": "\u6c38\u4f4f\u8cc7\u683c Neighbors:\u003cbr\u003e\u5e30\u56fd\u003cbr\u003e\u751f\u6d3b\u4fdd\u8b77\u003cbr\u003e\u7533\u8acb", "value": 3}, {"font": {"color": "black"}, "id": "\u5e30\u56fd", "label": "\u5e30\u56fd", "shape": "dot", "title": "\u5e30\u56fd Neighbors:\u003cbr\u003e\u751f\u6d3b\u4fdd\u8b77\u003cbr\u003e\u6c38\u4f4f\u8cc7\u683c", "value": 2}, {"font": {"color": "black"}, "id": "\u751f\u6d3b\u4fdd\u8b77", "label": "\u751f\u6d3b\u4fdd\u8b77", "shape": "dot", "title": "\u751f\u6d3b\u4fdd\u8b77 Neighbors:\u003cbr\u003e\u5e30\u56fd\u003cbr\u003e\u6c38\u4f4f\u8cc7\u683c\u003cbr\u003e\u7533\u8acb", "value": 3}, {"font": {"color": "black"}, "id": "\u7533\u8acb", "label": "\u7533\u8acb", "shape": "dot", "title": "\u7533\u8acb Neighbors:\u003cbr\u003e\u751f\u6d3b\u4fdd\u8b77\u003cbr\u003e\u6c38\u4f4f\u8cc7\u683c", "value": 2}, {"font": {"color": "black"}, "id": "\u56fd\u7c4d", "label": "\u56fd\u7c4d", "shape": "dot", "title": "\u56fd\u7c4d Neighbors:\u003cbr\u003e\u6c38\u4f4f\u6a29\u003cbr\u003e\u4ed8\u4e0e", "value": 2}, {"font": {"color": "black"}, "id": "\u4ed8\u4e0e", "label": "\u4ed8\u4e0e", "shape": "dot", "title": "\u4ed8\u4e0e Neighbors:\u003cbr\u003e\u6c38\u4f4f\u6a29\u003cbr\u003e\u56fd\u7c4d", "value": 2}, {"font": {"color": "black"}, "id": "\u6c38\u4f4f\u6a29", "label": "\u6c38\u4f4f\u6a29", "shape": "dot", "title": "\u6c38\u4f4f\u6a29 Neighbors:\u003cbr\u003e\u5fc5\u8981\u003cbr\u003e\u4ed8\u4e0e\u003cbr\u003e\u56fd\u7c4d", "value": 3}, {"font": {"color": "black"}, "id": "\u3042\u3066", "label": "\u3042\u3066", "shape": "dot", "title": "\u3042\u3066 Neighbors:\u003cbr\u003e\u5c3b\u76ee\u003cbr\u003e\u6d77\u5916\u003cbr\u003e\u7b11\u7b11\u003cbr\u003e\u65a1\u65cb\u003cbr\u003e\u76ee\u6e1b\u308a", "value": 5}, {"font": {"color": "black"}, "id": "\u5c3b\u76ee", "label": "\u5c3b\u76ee", "shape": "dot", "title": "\u5c3b\u76ee Neighbors:\u003cbr\u003e\u3042\u3066", "value": 1}, {"font": {"color": "black"}, "id": "\u65a1\u65cb", "label": "\u65a1\u65cb", "shape": "dot", "title": "\u65a1\u65cb Neighbors:\u003cbr\u003e\u3042\u3066", "value": 1}, {"font": {"color": "black"}, "id": "\u6d77\u5916", "label": "\u6d77\u5916", "shape": "dot", "title": "\u6d77\u5916 Neighbors:\u003cbr\u003e\u3042\u3066", "value": 1}, {"font": {"color": "black"}, "id": "\u76ee\u6e1b\u308a", "label": "\u76ee\u6e1b\u308a", "shape": "dot", "title": "\u76ee\u6e1b\u308a Neighbors:\u003cbr\u003e\u3042\u3066", "value": 1}, {"font": {"color": "black"}, "id": "\u7b11\u7b11", "label": "\u7b11\u7b11", "shape": "dot", "title": "\u7b11\u7b11 Neighbors:\u003cbr\u003e\u3042\u3066", "value": 1}, {"font": {"color": "black"}, "id": "\u4eba\u624b\u4e0d\u8db3", "label": "\u4eba\u624b\u4e0d\u8db3", "shape": "dot", "title": "\u4eba\u624b\u4e0d\u8db3 Neighbors:\u003cbr\u003e\u8a08\u753b\u003cbr\u003e\u6240\u5f97\u003cbr\u003e\u9593\u9055\u3044\u003cbr\u003e\u534a\u6e1b\u003cbr\u003e\u89e3\u6d88", "value": 5}, {"font": {"color": "black"}, "id": "\u534a\u6e1b", "label": "\u534a\u6e1b", "shape": "dot", "title": "\u534a\u6e1b Neighbors:\u003cbr\u003e\u4eba\u624b\u4e0d\u8db3", "value": 1}, {"font": {"color": "black"}, "id": "\u6240\u5f97", "label": "\u6240\u5f97", "shape": "dot", "title": "\u6240\u5f97 Neighbors:\u003cbr\u003e\u4eba\u624b\u4e0d\u8db3", "value": 1}, {"font": {"color": "black"}, "id": "\u89e3\u6d88", "label": "\u89e3\u6d88", "shape": "dot", "title": "\u89e3\u6d88 Neighbors:\u003cbr\u003e\u4eba\u624b\u4e0d\u8db3", "value": 1}, {"font": {"color": "black"}, "id": "\u8a08\u753b", "label": "\u8a08\u753b", "shape": "dot", "title": "\u8a08\u753b Neighbors:\u003cbr\u003e\u4eba\u624b\u4e0d\u8db3", "value": 1}, {"font": {"color": "black"}, "id": "\u9593\u9055\u3044", "label": "\u9593\u9055\u3044", "shape": "dot", "title": "\u9593\u9055\u3044 Neighbors:\u003cbr\u003e\u4eba\u624b\u4e0d\u8db3", "value": 1}, {"font": {"color": "black"}, "id": "\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9", "label": "\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9", "shape": "dot", "title": "\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9 Neighbors:\u003cbr\u003e\u6bce\u5e74\u003cbr\u003e\u52b4\u50cd\u003cbr\u003e\u66f4\u65b0", "value": 3}, {"font": {"color": "black"}, "id": "\u66f4\u65b0", "label": "\u66f4\u65b0", "shape": "dot", "title": "\u66f4\u65b0 Neighbors:\u003cbr\u003e\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9\u003cbr\u003e\u52b4\u50cd", "value": 2}, {"font": {"color": "black"}, "id": "\u6bce\u5e74", "label": "\u6bce\u5e74", "shape": "dot", "title": "\u6bce\u5e74 Neighbors:\u003cbr\u003e\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9", "value": 1}, {"font": {"color": "black"}, "id": "\u5fc5\u9808", "label": "\u5fc5\u9808", "shape": "dot", "title": "\u5fc5\u9808 Neighbors:\u003cbr\u003e\u52b4\u50cd", "value": 1}, {"font": {"color": "black"}, "id": "\u5fe0", "label": "\u5fe0", "shape": "dot", "title": "\u5fe0 Neighbors:\u003cbr\u003e\u515a\u003cbr\u003e\u81ea\u7531\u003cbr\u003e\u72ac\u003cbr\u003e\u79fb\u6c11", "value": 4}, {"font": {"color": "black"}, "id": "\u515a", "label": "\u515a", "shape": "dot", "title": "\u515a Neighbors:\u003cbr\u003e\u5fe0\u003cbr\u003e\u72ac", "value": 2}, {"font": {"color": "black"}, "id": "\u72ac", "label": "\u72ac", "shape": "dot", "title": "\u72ac Neighbors:\u003cbr\u003e\u515a\u003cbr\u003e\u5fe0", "value": 2}, {"font": {"color": "black"}, "id": "\u79fb\u6c11", "label": "\u79fb\u6c11", "shape": "dot", "title": "\u79fb\u6c11 Neighbors:\u003cbr\u003e\u5fe0", "value": 1}, {"font": {"color": "black"}, "id": "\u81ea\u7531", "label": "\u81ea\u7531", "shape": "dot", "title": "\u81ea\u7531 Neighbors:\u003cbr\u003e\u5fe0", "value": 1}, {"font": {"color": "black"}, "id": "\u5229\u7528", "label": "\u5229\u7528", "shape": "dot", "title": "\u5229\u7528 Neighbors:\u003cbr\u003e\u5fc5\u8981", "value": 1}, {"font": {"color": "black"}, "id": "\u5fc5\u8981", "label": "\u5fc5\u8981", "shape": "dot", "title": "\u5fc5\u8981 Neighbors:\u003cbr\u003e\u6c38\u4f4f\u6a29\u003cbr\u003e\u81ea\u6c11\u515a\u003cbr\u003e\u5916\u56fd\u4eba\u52b4\u50cd\u8005\u003cbr\u003e\u5b8c\u5168\u003cbr\u003e\u5229\u7528", "value": 5}, {"font": {"color": "black"}, "id": "\u5916\u56fd\u4eba\u52b4\u50cd\u8005", "label": "\u5916\u56fd\u4eba\u52b4\u50cd\u8005", "shape": "dot", "title": "\u5916\u56fd\u4eba\u52b4\u50cd\u8005 Neighbors:\u003cbr\u003e\u5fc5\u8981", "value": 1}, {"font": {"color": "black"}, "id": "\u5b8c\u5168", "label": "\u5b8c\u5168", "shape": "dot", "title": "\u5b8c\u5168 Neighbors:\u003cbr\u003e\u5fc5\u8981", "value": 1}, {"font": {"color": "black"}, "id": "\u81ea\u6c11\u515a", "label": "\u81ea\u6c11\u515a", "shape": "dot", "title": "\u81ea\u6c11\u515a Neighbors:\u003cbr\u003e\u5fc5\u8981", "value": 1}, {"font": {"color": "black"}, "id": "\u7701\u529b", "label": "\u7701\u529b", "shape": "dot", "title": "\u7701\u529b Neighbors:\u003cbr\u003e\u5b9f\u9a13\u003cbr\u003e\u601d\u8003\u505c\u6b62", "value": 2}, {"font": {"color": "black"}, "id": "\u5b9f\u9a13", "label": "\u5b9f\u9a13", "shape": "dot", "title": "\u5b9f\u9a13 Neighbors:\u003cbr\u003e\u7701\u529b", "value": 1}, {"font": {"color": "black"}, "id": "\u601d\u8003\u505c\u6b62", "label": "\u601d\u8003\u505c\u6b62", "shape": "dot", "title": "\u601d\u8003\u505c\u6b62 Neighbors:\u003cbr\u003e\u7701\u529b", "value": 1}]);
+        edges = new vis.DataSet([{"from": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "to": "\u5c11\u5b50", "value": 1}, {"from": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "to": "\u60e8\u72b6", "value": 1}, {"from": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "to": "\u653e\u7f6e", "value": 1}, {"from": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "to": "\u6700\u60aa", "value": 1}, {"from": "\u5916\u56fd\u4eba\u304a\u65ad\u308a", "to": "\u7406\u5ff5", "value": 1}, {"from": "1986\u5e74", "to": "\u6cd5\u5f8b", "value": 1}, {"from": "\u4e0a\u7d1a", "to": "\u6cd5\u5f8b", "value": 1}, {"from": "\u4e8c\u306e\u821e", "to": "\u6cd5\u5f8b", "value": 1}, {"from": "\u52b4\u50cd", "to": "\u6cd5\u5f8b", "value": 1}, {"from": "\u5e02\u6c11", "to": "\u6cd5\u5f8b", "value": 1}, {"from": "\u30ad\u30c4", "to": "\u4eba\u6a29\u554f\u984c", "value": 1}, {"from": "\u30ad\u30c4", "to": "\u5319", "value": 1}, {"from": "\u30ad\u30c4", "to": "\u5916\u56fd\u4eba", "value": 1}, {"from": "\u30ad\u30c4", "to": "\u65e5\u672c\u4eba", "value": 1}, {"from": "\u5319", "to": "\u4eba\u6a29\u554f\u984c", "value": 1}, {"from": "\u6c38\u4f4f\u8cc7\u683c", "to": "\u5e30\u56fd", "value": 1}, {"from": "\u6c38\u4f4f\u8cc7\u683c", "to": "\u751f\u6d3b\u4fdd\u8b77", "value": 1}, {"from": "\u6c38\u4f4f\u8cc7\u683c", "to": "\u7533\u8acb", "value": 1}, {"from": "\u751f\u6d3b\u4fdd\u8b77", "to": "\u5e30\u56fd", "value": 1}, {"from": "\u751f\u6d3b\u4fdd\u8b77", "to": "\u7533\u8acb", "value": 1}, {"from": "\u56fd\u7c4d", "to": "\u4ed8\u4e0e", "value": 1}, {"from": "\u6c38\u4f4f\u6a29", "to": "\u4ed8\u4e0e", "value": 1}, {"from": "\u6c38\u4f4f\u6a29", "to": "\u56fd\u7c4d", "value": 1}, {"from": "\u3042\u3066", "to": "\u5c3b\u76ee", "value": 1}, {"from": "\u3042\u3066", "to": "\u65a1\u65cb", "value": 1}, {"from": "\u3042\u3066", "to": "\u6d77\u5916", "value": 1}, {"from": "\u3042\u3066", "to": "\u76ee\u6e1b\u308a", "value": 1}, {"from": "\u3042\u3066", "to": "\u7b11\u7b11", "value": 1}, {"from": "\u4eba\u624b\u4e0d\u8db3", "to": "\u534a\u6e1b", "value": 1}, {"from": "\u4eba\u624b\u4e0d\u8db3", "to": "\u6240\u5f97", "value": 1}, {"from": "\u4eba\u624b\u4e0d\u8db3", "to": "\u89e3\u6d88", "value": 1}, {"from": "\u4eba\u624b\u4e0d\u8db3", "to": "\u8a08\u753b", "value": 1}, {"from": "\u4eba\u624b\u4e0d\u8db3", "to": "\u9593\u9055\u3044", "value": 1}, {"from": "\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9", "to": "\u66f4\u65b0", "value": 1}, {"from": "\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9", "to": "\u6bce\u5e74", "value": 1}, {"from": "\u52b4\u50cd", "to": "\u30de\u30a4\u30ca\u30f3\u30d0\u30fc\u30ab\u30fc\u30c9", "value": 1}, {"from": "\u52b4\u50cd", "to": "\u5fc5\u9808", "value": 1}, {"from": "\u52b4\u50cd", "to": "\u66f4\u65b0", "value": 1}, {"from": "\u5fe0", "to": "\u515a", "value": 1}, {"from": "\u5fe0", "to": "\u72ac", "value": 1}, {"from": "\u5fe0", "to": "\u79fb\u6c11", "value": 1}, {"from": "\u5fe0", "to": "\u81ea\u7531", "value": 1}, {"from": "\u72ac", "to": "\u515a", "value": 1}, {"from": "\u5229\u7528", "to": "\u5fc5\u8981", "value": 1}, {"from": "\u5916\u56fd\u4eba\u52b4\u50cd\u8005", "to": "\u5fc5\u8981", "value": 1}, {"from": "\u5fc5\u8981", "to": "\u5b8c\u5168", "value": 1}, {"from": "\u5fc5\u8981", "to": "\u81ea\u6c11\u515a", "value": 1}, {"from": "\u6c38\u4f4f\u6a29", "to": "\u5fc5\u8981", "value": 1}, {"from": "\u7701\u529b", "to": "\u5b9f\u9a13", "value": 1}, {"from": "\u7701\u529b", "to": "\u601d\u8003\u505c\u6b62", "value": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
